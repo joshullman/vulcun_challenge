@@ -1,0 +1,29 @@
+<script src='/socket.io/socket.io.js'></script>
+<script>
+	var socket = io.connect('http://localhost:8080');
+	$('#chat_form').submit(function (e) {
+		var message = $('#chat_input').val();
+		socket.emit('messages', message)
+	});
+
+	socket.on('messages', function (data) {
+		insertMessage(data); // use jquery to insert it onto the screen
+	});
+
+	socket.on('add chatter', function (name) {
+		var chatter = $('<li>'+name+'</li>').data('name', name);
+		$('#chatters').append(chatter);
+	})
+</script>
+
+<script>
+	var server = io.connect('http://localhost:8080');
+	server.on('connect', function (data) {
+		$('#status').html('Connected to chatroom');
+		nickname = prompt("What is your nickname?");
+		server.emit('join', nickname);
+	});
+	server.on('remove chatter', function (name) {
+		$('#chatters li[data-name=' + name + ']').remove();
+	});
+</script>
