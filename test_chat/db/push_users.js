@@ -44,5 +44,8 @@ fs.open('users.json', 'a', function(error, fd) {
 		console.log('file closed');
 	});
 });
+
+// mongoimport the json file
+
 // db.users.createIndex( { full_name: "text" } )
 // db.users.find({$text: { $search: "\"john\"" }})
