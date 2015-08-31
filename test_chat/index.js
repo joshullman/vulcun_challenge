@@ -2,11 +2,16 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-// NEED TO REPLACE THIS...HOW??
-// CONTROLLER FOR EXPRESS THAT LOOKS LIKE SINATRA
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/login.html');
-});
+
+var login = require('./routes/login');
+var register = require('./routes/register');
+var chat = require('./routes/chat');
+
+app.set('views', path.join(__dirname, 'views'));
+
+app.use('/', login);
+app.use('/register', register);
+app.use('/chat', chat);
 
 app.post('/', function(req, res){
   res.sendFile(__dirname + '/register.html');
