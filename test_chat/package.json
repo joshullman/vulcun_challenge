@@ -5,6 +5,8 @@
   "dependencies": {
     "express": "4.10.2",
     "faker": "^3.0.1",
+    "mongodb": "^2.0.42",
+    "redis": "^0.12.1",
     "socket.io": "1.2.0"
   }
 }
