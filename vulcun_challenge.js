@@ -1,3 +1,4 @@
+// REQUIREMENTS
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -8,13 +9,16 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var morgan = require('morgan');
 var ejs = require('ejs');
+var port = process.env.PORT || 3000;
+
+// SETTING UP DATABASES
 // var mongoClient = require('mongodb').mongoClient;
 // var mongoUrl = 'mongodb://localhost:27017/vulcun_challenge';
 var redis = require('redis');
 var redisClient = redis.createClient();
-var port = process.env.PORT || 3000;
 var _db;
 
+// SETTING UP THE APP
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -22,14 +26,16 @@ app.set('port', port)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-var login = require('./routes/login');
-var register = require('./routes/register');
-var chat = require('./routes/chat');
+// ROUTES
+app.get('/', function(req, res){
+  res.render('chat', { title: 'Express' });
+});
 
-app.use('/', login);
-app.use('/register', register);
-app.use('/chat', chat);
+app.post('/', function(req, res){
+  res.render('chat', { title: 'Express' });
+});
 
+// ESTABLISHING DATABASES
 // MongoClient.connect(mongoUrl, function(err, db) {
 //   if (err) {
 //     console.error(err);
@@ -42,12 +48,15 @@ app.use('/chat', chat);
 //   }
 // });
 
+// INTERACTING WITH THE REDIS DATABASE
 var storeMessage = function (name, data) {
   var message = JSON.stringify({user: email, data: data})
   redisClient.lpush('messages', message, function (err, response) {
     redisClient.ltrim('messages', 0, 9);
   });
 }
+
+// INTERACTING WITH THE MONGO DATABASE
 
 // // SOCKET IO
 // io.on('connection', function(socket){
