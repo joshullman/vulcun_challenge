@@ -1,26 +1,43 @@
-var app = require('express')();
+var express = require('express');
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var port = process.env.PORT || 3000;
+var mongoClient = require('mongodb').mongoClient;
+var mongoUrl = 'mongodb://localhost:27017/vulcun_challenge';
+var _db;
+
+var app = express();
+var path = require('path');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+app.use(morgan('dev'));
+
+app.use(bodyParser.json());
+
+// MongoClient.connect(mongoUrl, function(err, db) {
+//   if (err) {
+//     console.error(err);
+//   } else {
+//     console.log('connected to mongo');
+//     _db = db;
+//     app.listen(port, function() {
+//       console.log('listening for requests on localhost:%s,', port);
+//     });
+//   }
+// });
 
 var login = require('./routes/login');
 var register = require('./routes/register');
 var chat = require('./routes/chat');
 
+app.set('port', port)
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'views')));
 
 app.use('/', login);
 app.use('/register', register);
 app.use('/chat', chat);
-
-app.post('/', function(req, res){
-  res.sendFile(__dirname + '/register.html');
-});
-
-app.get('/chat', function(req, res){
-  res.sendFile(__dirname + '/chat.html');
-});
-
 
 
 // SOCKET IO
